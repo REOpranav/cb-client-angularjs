@@ -1,0 +1,1 @@
+../projects/ngx-configbee/README.md
