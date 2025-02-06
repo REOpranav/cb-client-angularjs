@@ -74,31 +74,59 @@ platformBrowserDynamic([
 
 Inject `NgxConfigbeeService` into your components or services to access dynamic configurations and feature flags:
 
-```typescript
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { NgxConfigbeeService } from 'ngx-configbee';
+1. **Default Change Detection** – Runs change detection on every event. 
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  // For ChangeDetectionStrategy.OnPush, you don't need it for Default Strategy
-  changeDetection: ChangeDetectionStrategy.OnPush
-})
-export class AppComponent {
-  constructor(private configbeeService: NgxConfigbeeService, private cd: ChangeDetectorRef) {
-    this.configbeeService = configbeeService
-  }
 
-  // You need to call markForCheck For ChangeDetectionStrategy.OnPush and not required for Default Strategy
-  ngOnInit() {
-    this.configbeeService.updates.subscribe(event => {
-      this.cd.markForCheck();
-    });
-  }
-}
-```
+    ```typescript
+    import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+    import { NgxConfigbeeService } from 'ngx-configbee';
+    
+    @Component({
+      selector: 'app-root',
+      templateUrl: './app.component.html',
+      styleUrls: ['./app.component.css']
+    })
+    export class AppComponent {
+      constructor(protected cb: NgxConfigbeeService, private cd: ChangeDetectorRef) {}
+    
+      // You need to call markForCheck For ChangeDetectionStrategy.OnPush and not required for Default Strategy
+      ngOnInit() {
+        cb.updates.subscribe(event => {
+          cd.markForCheck();
+        });
+      }
+    }
 
+
+        
+    ```
+
+2. **`OnPush` Change Detection** – Only runs when inputs change, improving performance.
+
+
+    ```typescript
+      import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+      import { NgxConfigbeeService } from 'ngx-configbee';
+      
+      @Component({
+        selector: 'app-root',
+        templateUrl: './app.component.html',
+        styleUrls: ['./app.component.css'],
+        changeDetection: ChangeDetectionStrategy.OnPush
+      })
+      export class AppComponent {
+        constructor(protected cb: NgxConfigbeeService, private cd: ChangeDetectorRef) {}
+      
+        // You need to call markForCheck For ChangeDetectionStrategy.OnPush and not required for Default Strategy
+        ngOnInit() {
+          cb.updates.subscribe(event => {
+            cd.markForCheck();
+          });
+        }
+      }
+      
+    ```
+    
 ### 3. Access configurations in your templates
 
 Use `NgxConfigbeeService` within your component templates to display dynamic configurations and feature flags:
@@ -157,15 +185,13 @@ Configbee allows you to define target properties to tailor configurations based 
   ...
 })
 export class MyComponent {
-  constructor(private configbeeService: NgxConfigbeeService, private cd: ChangeDetectorRef) {
-    this.configbeeService = configbeeService
-  }
+  constructor(private cb: NgxConfigbeeService, private cd: ChangeDetectorRef) {}
 
   loginSuccess() {
-    this.configbeeService.setTargetProperties({"userId": this.userId, "userName": this.userName})
+    cb.setTargetProperties({"userId": this.userId, "userName": this.userName})
   }
   logoutSuccess() {
-    this.configbeeService.unsetTargetProperties()
+    cb.unsetTargetProperties()
   }
 
 }
