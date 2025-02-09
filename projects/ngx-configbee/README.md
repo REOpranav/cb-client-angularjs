@@ -86,7 +86,7 @@ import { NgxConfigbeeService } from 'ngx-configbee';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  constructor(protected cb: NgxConfigbeeService, private cd: ChangeDetectorRef) {}
+  constructor(protected cb: NgxConfigbeeService) {}
 }
 ```
 
