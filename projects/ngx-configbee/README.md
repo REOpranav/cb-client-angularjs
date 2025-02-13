@@ -91,7 +91,7 @@ export class AppComponent {
 ```
 
 
-**(Optional)** Subscribe to updates and invoke change detection:\
+**(Optional)** Subscribe to updates and invoke change detection:
 > **Note:** This is typically not required when using Default change detection strategy in componets,
 required only when using OnPush change detection strategy
 
